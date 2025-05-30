@@ -1,0 +1,10 @@
+| Componente      | Pino L298N | Pino ESP32    | Função                      |
+| --------------- | ---------- | ------------- | --------------------------- |
+| Motor A         | IN1        | GPIO 18       | Sentido 1 do motor esquerdo |
+| Motor A         | IN2        | GPIO 19       | Sentido 2 do motor esquerdo |
+| Motor B         | IN3        | GPIO 21       | Sentido 1 do motor direito  |
+| Motor B         | IN4        | GPIO 22       | Sentido 2 do motor direito  |
+| ENA (Motor A)   | ENA        | 5V            | Ativa o motor A             |
+| ENB (Motor B)   | ENB        | 5V            | Ativa o motor B             |
+| GND             | GND        | GND           | Terra comum                 |
+| VCC (12V ou 6V) | VCC        | Fonte externa | Alimentação dos motores     |
