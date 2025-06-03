@@ -3,6 +3,9 @@
 #define IN3 21
 #define IN4 22
 
+#include "BluetoothSerial.h"
+BluetoothSerial SerialBT;  // Instância do Bluetooth
+
 enum Direcao {NORTE, LESTE, SUL, OESTE};
 
 int x = 0, y = 0;
@@ -12,7 +15,8 @@ const int GRID_WIDTH = 5;
 const int GRID_HEIGHT = 5;
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(115200);      // Debug no cabo USB
+  SerialBT.begin("RoboESP32");  // Nome do dispositivo Bluetooth
 
   pinMode(IN1, OUTPUT);
   pinMode(IN2, OUTPUT);
@@ -21,13 +25,12 @@ void setup() {
 
   stopMotors();
 
-  Serial.println("Robô iniciado na posição (0, 0), voltado para NORTE.");
-  Serial.println("Digite um comando (f, t, d, e):");
+  Serial.println("Bluetooth iniciado como 'RoboESP32'");
 }
 
 void loop() {
-  if (Serial.available()) {
-    char comando = Serial.read();
+  if (SerialBT.available()) {
+    char comando = SerialBT.read();
 
     switch (comando) {
       case 'f':
@@ -42,18 +45,21 @@ void loop() {
       case 'e':
         girarEsquerda();
         break;
+      case 'p':
+        stopMotors();
+        break;
       default:
-        Serial.println("Comando inválido.");
+        Serial.println("Comando inválido recebido via Bluetooth.");
         return;
     }
 
-    Serial.print("Nova posição: (");
+    Serial.print("Posição: (");
     Serial.print(x);
     Serial.print(", ");
     Serial.print(y);
-    Serial.print("), Direção: ");
+    Serial.print(") | Direção: ");
     imprimirDirecao();
-    Serial.println("\nDigite outro comando:");
+    Serial.println();
   }
 }
 
@@ -66,6 +72,7 @@ void moverFrente() {
     stopMotors();
   } else {
     Serial.println("Movimento bloqueado (borda do tabuleiro).");
+    stopMotors();
   }
 }
 
@@ -77,6 +84,7 @@ void moverTras() {
     stopMotors();
   } else {
     Serial.println("Movimento bloqueado (borda do tabuleiro).");
+    stopMotors();
   }
 }
 
@@ -91,7 +99,7 @@ void girarEsquerda() {
   moverMotoresEsquerda();
   delay(600);
   stopMotors();
-  direcao = static_cast<Direcao>((direcao + 3) % 4); // -1 mod 4
+  direcao = static_cast<Direcao>((direcao + 3) % 4);
 }
 
 // ======= Lógica virtual =======
